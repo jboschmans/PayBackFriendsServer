@@ -10,10 +10,12 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function(req, res){
-  if (err) throw err;
-  db.collection(col).find().toArray(function(err, docs){
+  mongo.connect(url, function(err, db){
     if (err) throw err;
-    res.send(JSON.stringify(docs));
+    db.collection(col).find().toArray(function(err, docs){
+      if (err) throw err;
+      res.send(JSON.stringify(docs));
+    });
   });
 });
 
