@@ -1,0 +1,14 @@
+{
+  "name": "paybackfriendsserver",
+  "version": "1.0.0",
+  "description": "Dit is de server die de link is tussen de iOS applicatie PayBackFriends en de mongo DB.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joris Boschmans",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
