@@ -19,6 +19,20 @@ app.get('/', function(req, res){
   });
 });
 
+app.get('/checkuser/:user', function(req, res){
+  var _user = req.params.user;
+  mongo.connect(url, function(err, db){
+    if (err) throw err;
+    db.collection(col).find().toArray(function(err, docs){
+      if (err) throw err;
+      for (var e in docs){
+        if (e.username === _user) res.send("true");
+      }
+      res.send("false");
+    });
+  })
+})
+
 app.listen(process.env.PORT || 3000, function(){
   console.log("Listening....");
 });
