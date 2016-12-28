@@ -9,6 +9,7 @@
   "author": "Joris Boschmans",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.1",
     "express": "^4.14.0",
     "mongodb": "^2.2.12"
   }
