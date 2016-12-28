@@ -4,7 +4,7 @@ var cors = require('cors');
 var url = "mongodb://jorisboschmans:ITrules4565@ds029635.mlab.com:29635/jorisboschmans-mydb";
 var col = "paybackfriendsserver";
 
-//app.use(cors());
+app.use(cors());
 
 app.get('/', function(req, res){
   mongo.connect(url, function(err, db){
