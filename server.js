@@ -27,11 +27,15 @@ app.get('/checkuser/:user', function(req, res){
       if (err) throw err;
       for (var i = 0; i < docs.length; i++){
         if (docs[i].username === _user){
-          res.send("true");
+          res.send({
+            "response": "true"
+          });
           return;
         }
       }
-      res.send("false");
+      res.send({
+        "response": "false"
+      });
     });
   });
 });
