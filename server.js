@@ -55,14 +55,14 @@ app.get('/login/:username/:password', function(req, res){
         }
       }
       if (!doc){
-        res.send("username false");
+        res.send({"response":"username false"});
         return;
       }
       if (doc.wachtwoord !== _password){
-        res.send("password false");
+        res.send({"response":"password false"});
         return;
       }
-      res.send("true");
+      res.send({"response":"true"});
     });
   });
 });
