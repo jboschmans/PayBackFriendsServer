@@ -80,7 +80,9 @@ app.post('/register', function(req, res){
       "vrienden":[]
     }, function(err, result){
       if (err) throw err;
-      res.send(true);
+      res.send({
+        "response": "true"
+      });
     });
   });
 });
