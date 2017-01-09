@@ -9,6 +9,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// GET all
 app.get('/', function(req, res){
   mongo.connect(url, function(err, db){
     if (err) throw err;
@@ -19,6 +20,7 @@ app.get('/', function(req, res){
   });
 });
 
+// GET check if user exists
 app.get('/checkuser/:user', function(req, res){
   var _user = req.params.user;
   mongo.connect(url, function(err, db){
@@ -40,6 +42,7 @@ app.get('/checkuser/:user', function(req, res){
   });
 });
 
+// GET login with correct credentials
 app.get('/login/:username/:password', function(req, res){
   var _username = req.params.username;
   var _password = req.params.password;
@@ -67,6 +70,30 @@ app.get('/login/:username/:password', function(req, res){
   });
 });
 
+// GET look for user with string
+app.get('/search/:username', function(req, res){
+  var _username = req.params.username;
+  mongo.connect(url, function(err, db){
+    if (err) throw err;
+    db.collection(col).find().toArray(function(err, docs){
+      if (err) throw err;
+      var users = [];
+      for (var i = 0; i < docs.length; i++){
+        if (docs[i].username.indexOf(_username) !== -1){
+          users.push({"user":docs[i].username});
+        }
+      }
+      if (users.length < 1){
+        res.send({"response":"false"});
+        return;
+      } else {
+        res.send({"response":users});
+      }
+    });
+  });
+});
+
+//POST register new user
 app.post('/register', function(req, res){
   var _username = req.body.username;
   var _name = req.body.name;
