@@ -80,7 +80,7 @@ app.get('/search/:username', function(req, res){
       var users = [];
       for (var i = 0; i < docs.length; i++){
         if (docs[i].username.indexOf(_username) !== -1){
-          users.push({"user":docs[i].username});
+          users.push(docs[i].username);
         }
       }
       if (users.length < 1){
