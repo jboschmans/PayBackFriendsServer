@@ -93,6 +93,20 @@ app.get('/search/:username', function(req, res){
   });
 });
 
+// GET all friends and debts
+app.get('/friends/:username', function(req, res){
+  var _username = req.params.username;
+  mongo.connect(url, function(err, db){
+    if (err) throw err;
+    db.collection(col).find({
+      "username": _username
+    }).toArray(function(err, docs){
+      if (err) throw err;
+      res.send(docs[0].vrienden);
+    });
+  });
+});
+
 //POST register new user
 app.post('/register', function(req, res){
   var _username = req.body.username;
