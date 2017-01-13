@@ -102,7 +102,9 @@ app.get('/friends/:username', function(req, res){
       "username": _username
     }).toArray(function(err, docs){
       if (err) throw err;
-      res.send(docs[0].vrienden);
+      res.send({
+        "response":docs[0].vrienden
+      });
     });
   });
 });
