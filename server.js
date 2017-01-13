@@ -71,8 +71,9 @@ app.get('/login/:username/:password', function(req, res){
 });
 
 // GET look for user with string
-app.get('/search/:username', function(req, res){
+app.get('/search/:username/:loggedIn', function(req, res){
   var _username = req.params.username;
+  var _loggedIn = req.params.loggedIn;
   mongo.connect(url, function(err, db){
     if (err) throw err;
     db.collection(col).find().toArray(function(err, docs){
@@ -83,12 +84,30 @@ app.get('/search/:username', function(req, res){
           users.push(docs[i].username);
         }
       }
-      if (users.length < 1){
-        res.send({"response":"false"});
-        return;
-      } else {
-        res.send({"response":users});
-      }
+      db.collection(col).find({
+        "username":_loggedIn
+      }).toArray(function(err, docs){
+        if (err) throw err;
+        var friends = docs[0].vrienden;
+        friends.push({
+          "username":_loggedIn
+        });
+        for (var j = 0; j < friends.length; j++){
+          for (var k = 0; k < users.length; k++){
+            if (users[k] === friends[j].username){
+              users.splice(k,1);
+              break;
+            }
+          }
+        }
+
+        if (users.length < 1){
+          res.send({"response":"false"});
+          return;
+        } else {
+          res.send({"response":users});
+        }
+      });
     });
   });
 });
