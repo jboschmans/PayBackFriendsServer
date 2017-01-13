@@ -114,6 +114,39 @@ app.post('/register', function(req, res){
   });
 });
 
+//POST add new friend
+app.post('/addfriend', function(req, res){
+  var _username = req.body.username;
+  var _friend = req.body.friend;
+
+  mongo.connect(url, function(err, db){
+    if (err) throw err;
+    db.collection(col).find().toArray(function(err, docs){
+      if (err) throw err;
+      var friends = [];
+      for (var i = 0; i < docs.length; i++){
+        if (docs[i].username == _username){
+          friends = docs[i].vrienden;
+          break;
+        }
+      }
+      friends.push({
+        "username":_friend,
+        "owed":0.0
+      });
+
+      db.collection(col).update(
+        {"username": _username},
+        {$set: {"vrienden": friends}},
+        function(err, result){
+          if (err) throw err;
+          res.send(result);
+        }
+      );
+    });
+  });
+});
+
 app.listen(process.env.PORT || 3000, function(){
   console.log("Listening....");
 });
