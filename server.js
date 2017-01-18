@@ -121,8 +121,71 @@ app.get('/friends/:username', function(req, res){
       "username": _username
     }).toArray(function(err, docs){
       if (err) throw err;
+      var responseArray = [];
+      var doc = docs[0];
+      for (var i = 0; i < doc.vrienden.length; i++){
+        responseArray.push(doc.vrienden[i].username);
+        responseArray.push(doc.vrienden[i].owed);
+      }
       res.send({
-        "response":docs[0].vrienden
+        "response":responseArray
+      });
+    });
+  });
+});
+
+//POST add owed to a friend
+app.post('/addmoney', function(req, res){
+  var _username = req.body.username;
+  var _friend = req.body.friend;
+  var _amount = req.body.amount;
+  mongo.connect(url, function(err, db){
+    if (err) throw err;
+    db.collection(col).find({
+      "username":_username
+    }).toArray(function(err, docs){
+      if (err) throw err;
+      var newFriends = docs[0].vrienden;
+      for (var i = 0; i <  newFriends.length; i++){
+        if (newFriends[i].username === _friend){
+          a = +newFriends[i].owed;
+          b = +_amount;
+          c = a+b;
+          c = Math.round(c*100) / 100;
+          newFriends[i].owed = c;
+          break;
+        }
+      }
+      db.collection(col).update({
+        "username":_username
+      },{$set: {
+        "vrienden":newFriends
+      }}, function(err, result){
+        if (err) throw err;
+        db.collection(col).find({
+          "username": _friend
+        }).toArray(function(err, docs){
+          if (err) throw err;
+          var newFriends = docs[0].vrienden;
+          for (var i = 0; i < newFriends.length; i++){
+            if (newFriends[i].username === _username){
+              a = +newFriends[i].owed;
+              b = +_amount;
+              c = a-b;
+              c = Math.round(c*100) / 100;
+              newFriends[i].owed = c;
+              break;
+            }
+          }
+          db.collection(col).update({
+            "username":_friend
+          },{$set: {
+            "vrienden":newFriends
+          }}, function(err, result){
+            if (err) throw err;
+            res.send({"response":"true"});
+          });
+        });
       });
     });
   });
@@ -181,6 +244,7 @@ app.post('/addfriend', function(req, res){
     });
   });
 });
+
 
 app.listen(process.env.PORT || 3000, function(){
   console.log("Listening....");
