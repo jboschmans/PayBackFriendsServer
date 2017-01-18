@@ -238,7 +238,23 @@ app.post('/addfriend', function(req, res){
         {$set: {"vrienden": friends}},
         function(err, result){
           if (err) throw err;
-          res.send(result);
+          db.collection(col).find({
+            "username": _friend
+          }).toArray(function(err, docs){
+            if (err) throw err;
+            var friends = docs[0].vrienden;
+            friends.push({
+              "username":_username,
+              "owed":0.0
+            });
+            db.collection(col).update({
+              "username": _friend
+            },{$set: {
+              "vrienden": friends
+            }}, function(err, result){
+              res.send({"response":"true"})
+            });
+          });
         }
       );
     });
